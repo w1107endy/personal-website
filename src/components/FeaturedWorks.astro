@@ -1,0 +1,77 @@
+---
+const works = [
+  {
+    title: "Taiwan People's Party The Kingmaker In Island's New Parliament",
+    publication: "Agence France-Presse",
+    year: "2024",
+    description: "Analysis on partisan politics in Taiwan and cross-strait relations",
+    language: "English",
+    url: "#"
+  },
+  {
+    title: "A Village's 20-Year Battle Against a Landfill",
+    publication: "The Reporter",
+    year: "2023",
+    description: "In-depth coverage of a decades-long land dispute",
+    language: "Chinese",
+    url: "#"
+  },
+  {
+    title: "Money, Happiness, and 'Toxic Chicken Soup' Among Taiwanese Youth",
+    publication: "Storm Media",
+    year: "2023",
+    description: "Data-driven analysis of viral social media phenomenon",
+    language: "Chinese",
+    url: "#"
+  }
+];
+---
+<section class="featured-works">
+  <h2>Selected Works</h2>
+  <div class="works-grid">
+    {works.map(work => (
+      <article class="work-card">
+        <h3>{work.title}</h3>
+        <p class="publication">{work.publication}, {work.year}</p>
+        <p class="description">{work.description}</p>
+        <span class="language">{work.language}</span>
+        <a href={work.url} class="read-more">Read →</a>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .works-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .work-card {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+  }
+
+  .publication {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+  }
+
+  .description {
+    margin: 0.5rem 0;
+  }
+
+  .language {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-right: 1rem;
+  }
+
+  .read-more {
+    color: #2d2d2d;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+</style>

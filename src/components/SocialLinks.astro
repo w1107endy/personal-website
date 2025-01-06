@@ -1,0 +1,32 @@
+---
+const socials = [
+  { name: 'Email', url: 'mailto:tingwei.lin2025@gmail.com' },
+  { name: 'Phone', url: 'tel:+886983244316' }
+];
+---
+<div class="social-links">
+  {socials.map(social => (
+    <a href={social.url} target="_blank" rel="noopener noreferrer">
+      {social.name}
+    </a>
+  ))}
+</div>
+
+<style>
+  .social-links {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 1rem 0;
+  }
+
+  a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  a:hover {
+    color: #2d2d2d;
+  }
+</style>

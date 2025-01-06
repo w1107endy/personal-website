@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About - Ting-Wei Lin">
+	<div class="about-content">
+		<p class="bio">
+			A Taiwanese journalist obsessed with quirky details and finding their interplay among people, institutions, technology, and culture. Currently focusing on cross-strait relations, Taiwan's politics, and social movements.
+		</p>
+		<div class="contact">
+			<a href="mailto:tingwei.lin2025@gmail.com">tingwei.lin2025@gmail.com</a>
+			<a href="tel:+886983244316">+886 983-244-316</a>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.about-content {
+		margin-top: 2rem;
+		max-width: 65ch;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.bio {
+		font-size: 1.2rem;
+		line-height: 1.6;
+		margin-bottom: 2rem;
+	}
+
+	.contact {
+		display: flex;
+		gap: 2rem;
+		justify-content: center;
+		margin-top: 3rem;
+	}
+
+	.contact a {
+		color: #666;
+		text-decoration: none;
+	}
+
+	.contact a:hover {
+		color: #000;
+	}
+</style>

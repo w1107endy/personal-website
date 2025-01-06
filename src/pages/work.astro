@@ -1,0 +1,77 @@
+---
+import { getWorks } from '../data/works';
+
+const works = await getWorks();
+---
+
+<div class="works-grid">
+	{works.map((work) => (
+		<div class="work-item">
+			<h2>{work.title}</h2>
+			<p>{work.description}</p>
+			{work.image && <img src={work.image} alt={work.title} />}
+			<a href={work.link} target="_blank" rel="noopener noreferrer">View Project</a>
+			<div class="tags">
+				{work.tags.map(tag => <span class="tag">{tag}</span>)}
+			</div>
+		</div>
+	))}
+</div>
+
+<style>
+	.works-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 3rem;
+		margin: 3rem auto;
+		max-width: 1100px;
+	}
+
+	.work-item {
+		display: flex;
+		flex-direction: column;
+	}
+
+	h2 {
+		font-size: 0.875rem;
+		font-weight: 700;
+		margin: 0;
+		line-height: 1.4;
+	}
+
+	.meta {
+		color: #666;
+		margin: 0.5rem 0;
+		font-size: 0.75rem;
+	}
+
+	.description {
+		margin: 0.5rem 0;
+		font-size: 0.875rem;
+		flex-grow: 1;
+	}
+
+	.read-link {
+		color: #000;
+		text-decoration: none;
+		font-size: 0.75rem;
+		margin-top: auto;
+	}
+
+	.read-link:hover {
+		text-decoration: underline;
+	}
+
+	@media (max-width: 1024px) {
+		.works-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 2rem;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.works-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
