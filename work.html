@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Work | Ting-Wei Lin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1><a href="index.html">Ting-Wei Lin</a></h1>
+        <p class="tagline">A Taiwanese journalist making quirky details into stories.</p>
+    </header>
+
+    <nav class="site-nav">
+        <a href="work.html" class="active">WORK</a>
+        <a href="about.html">ABOUT</a>
+    </nav>
+
+    <main>
+        <div id="articles-container" class="articles-grid">
+            <div id="loading-skeleton">
+                <!-- 載入動畫內容 -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function fetchNotionData() {
+            const response = await fetch('http://localhost:3000/api/articles');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        }
+
+        function processNotionData(data) {
+            return data.map(page => ({
+                id: page.id,
+                title: page.properties.Title.title[0]?.plain_text || '',
+                date: page.properties.Date.date?.start || '',
+                publisher: page.properties.Publisher.rich_text[0]?.plain_text || '',
+                lead: page.properties.Lead.rich_text[0]?.plain_text || ''
+            }));
+        }
+
+        function formatYear(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.getFullYear().toString();
+        }
+
+        async function loadArticles() {
+            const articlesGrid = document.querySelector('.articles-grid');
+            const loadingSkeleton = document.querySelector('#loading-skeleton');
+
+            try {
+                const data = await fetchNotionData();
+                const articles = processNotionData(data);
+                
+                articlesGrid.innerHTML = articles.map(article => {
+                    // 只顯示年份和出版者
+                    const metadataItems = [];
+                    if (article.date) metadataItems.push(`<span class="date">${formatYear(article.date)}</span>`);
+                    if (article.publisher) metadataItems.push(`<span class="publisher">${article.publisher}</span>`);
+
+                    return `
+                        <div class="article-card">
+                            <h2 class="article-title">
+                                <a href="article.html?id=${article.id}">${article.title || 'Untitled'}</a>
+                            </h2>
+                            ${metadataItems.length > 0 ? 
+                                `<div class="article-meta">${metadataItems.join('')}</div>` 
+                                : ''}
+                            ${article.lead ? `<p class="article-lead">${article.lead}</p>` : ''}
+                            <a href="article.html?id=${article.id}" class="read-more">Read →</a>
+                        </div>
+                    `;
+                }).join('');
+
+                if (loadingSkeleton) {
+                    loadingSkeleton.style.display = 'none';
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                articlesGrid.innerHTML = 
+                    '<div class="error-message">Error loading articles. Please try again later.</div>';
+            }
+        }
+
+        // 當頁面載入時�行
+        window.addEventListener('DOMContentLoaded', loadArticles);
+    </script>
+</body>
+</html> 

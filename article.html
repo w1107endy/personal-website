@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Article | Ting-Wei Lin</title>
+    <!-- 字體設定 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1><a href="index.html">Ting-Wei Lin</a></h1>
+        <p class="tagline">A Taiwanese journalist making quirky details into stories.</p>
+    </header>
+
+    <nav class="site-nav">
+        <a href="work.html">WORK</a>
+        <a href="about.html">ABOUT</a>
+    </nav>
+
+    <article class="article-container">
+        <!-- 骨架屏 -->
+        <div id="loading-skeleton">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-meta"></div>
+            <div class="skeleton skeleton-text"></div>
+        </div>
+        
+        <!-- 文章內容 -->
+        <div id="article-content" style="display: none;">
+            <h1 class="article-page-title"></h1>
+            <div class="article-meta">
+                <span class="date"></span>
+                <span class="author"></span>
+                <span class="publisher"></span>
+            </div>
+            <div class="article-body"></div>
+        </div>
+    </article>
+
+    <script>
+        async function loadArticle() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pageId = urlParams.get('id');
+            
+            if (!pageId) {
+                showError('Article not found');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/notion-page/${pageId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // 詳細檢查資料結構
+                console.log('Full API response:', JSON.stringify(data, null, 2));
+                console.log('Properties:', data.properties);
+                console.log('Content structure:', data.content);  // 或其他可能包含內容的欄位
+                
+                // 隱藏骨架屏
+                document.getElementById('loading-skeleton').style.display = 'none';
+                
+                // 顯示並更新文章內容
+                const contentElement = document.getElementById('article-content');
+                contentElement.style.display = 'block';
+                
+                // 更新文章資訊
+                const title = data.properties.Title.title[0]?.plain_text || 'Untitled';
+                const date = data.properties.Date.date?.start || '';
+                const publisher = data.properties.Publisher.rich_text[0]?.plain_text || '';
+                const author = data.properties.Author.rich_text[0]?.plain_text || '';
+                
+                document.title = title;
+                document.querySelector('.article-page-title').textContent = title;
+                document.querySelector('.date').textContent = formatDate(date);
+                document.querySelector('.publisher').textContent = publisher;
+                document.querySelector('.author').textContent = author;
+                
+                // 更新文章內容
+                if (data.content) {  // 改用 data.content 而不是 data.blocks
+                    document.querySelector('.article-body').innerHTML = formatContent(data.content);
+                } else {
+                    console.error('No content found in data:', data);
+                    document.querySelector('.article-body').innerHTML = '<p>No content available</p>';
+                }
+            } catch (error) {
+                console.error('Error loading article:', error);
+                showError(`Error loading article: ${error.message}`);
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-TW');
+        }
+
+        function showError(message) {
+            document.getElementById('loading-skeleton').style.display = 'none';
+            document.getElementById('article-content').innerHTML = `
+                <div class="error-message">${message}</div>
+            `;
+        }
+
+        function formatContent(blocks) {
+            if (!blocks || !Array.isArray(blocks)) {
+                console.error('Invalid blocks data:', blocks);
+                return '<p>No content available</p>';
+            }
+
+            return blocks.map(block => {
+                console.log('Processing block:', block); // 檢查每個區塊的結構
+                
+                switch (block.type) {
+                    case 'paragraph':
+                        const paragraphText = block.paragraph.rich_text
+                            .map(text => text.plain_text)
+                            .join('');
+                        return `<p>${paragraphText}</p>`;
+                    
+                    case 'heading_1':
+                        const h1Text = block.heading_1.rich_text
+                            .map(text => text.plain_text)
+                            .join('');
+                        return `<h2>${h1Text}</h2>`;
+                    
+                    case 'heading_2':
+                        const h2Text = block.heading_2.rich_text
+                            .map(text => text.plain_text)
+                            .join('');
+                        return `<h3>${h2Text}</h3>`;
+                    
+                    case 'bulleted_list_item':
+                        const listText = block.bulleted_list_item.rich_text
+                            .map(text => text.plain_text)
+                            .join('');
+                        return `<li>${listText}</li>`;
+                    
+                    default:
+                        console.log('Unknown block type:', block.type);
+                        return '';
+                }
+            }).join('');
+        }
+
+        // 頁面載入時執行
+        window.addEventListener('DOMContentLoaded', loadArticle);
+    </script>
+</body>
+</html> 

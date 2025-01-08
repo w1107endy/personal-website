@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About | Ting-Wei Lin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1><a href="index.html">Ting-Wei Lin</a></h1>
+        <p class="tagline">A Taiwanese journalist making quirky details into stories.</p>
+    </header>
+
+    <nav class="site-nav">
+        <a href="work.html">WORK</a>
+        <a href="about.html" class="active">ABOUT</a>
+    </nav>
+
+    <!-- About 頁面的內容 -->
+    <div class="about-content">
+        <div id="loading-skeleton">
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+        </div>
+        <div id="about-text"></div>
+    </div>
+
+    <script>
+        async function loadAboutContent() {
+            try {
+                const response = await fetch('http://localhost:3000/api/about');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // 隱藏載入動畫
+                document.getElementById('loading-skeleton').style.display = 'none';
+                
+                // 顯示內容
+                const aboutText = document.getElementById('about-text');
+                aboutText.innerHTML = data.content.split('\n').map(paragraph => 
+                    `<p>${paragraph}</p>`
+                ).join('');
+                
+            } catch (error) {
+                console.error('Error loading about content:', error);
+                document.getElementById('loading-skeleton').style.display = 'none';
+                document.getElementById('about-text').innerHTML = 
+                    '<p>Error loading content. Please try again later.</p>';
+            }
+        }
+
+        // 當頁面載入時執行
+        window.addEventListener('DOMContentLoaded', loadAboutContent);
+    </script>
+</body>
+</html> 

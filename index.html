@@ -1,53 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ting-Wei Lin</title>
-    <style>
-        body {
-            font-family: monospace;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .subtitle {
-            font-style: italic;
-            color: #666;
-            margin-bottom: 3rem;
-        }
-
-        nav {
-            margin-top: 2rem;
-        }
-
-        nav a {
-            color: #333;
-            text-decoration: none;
-            margin: 0 1rem;
-            font-size: 1.2rem;
-        }
-
-        nav a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
 </head>
 <body>
-    <h1>Ting-Wei Lin</h1>
-    <div class="subtitle">A Taiwanese journalist making quirky details into stories.</div>
-    
-    <nav>
-        <a href="#work">WORK</a>
-        <a href="#blog">BLOG</a>
-        <a href="#about">ABOUT</a>
+    <header class="site-header">
+        <h1><a href="index.html">Ting-Wei Lin</a></h1>
+        <p class="tagline">A Taiwanese journalist making quirky details into stories.</p>
+    </header>
+
+    <nav class="site-nav">
+        <a href="work.html">WORK</a>
+        <a href="about.html">ABOUT</a>
     </nav>
+
+    <main>
+        <div id="articles-container" class="articles-grid"></div>
+    </main>
+
+    <script>
+        // 重定向到 work 頁面
+        window.location.href = 'work.html';
+    </script>
 </body>
 </html>
